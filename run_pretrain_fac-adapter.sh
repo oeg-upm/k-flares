@@ -7,8 +7,8 @@ GPU='0,1,2,3'
 CUDA_VISIBLE_DEVICES=$GPU python fac-adapter.py  \
         --model_type roberta \
         --model_name=roberta-large  \
-        --data_dir=./data/trex-rc  \
-        --output_dir trex_output \
+        --data_dir=./data/flares  \
+        --output_dir flares_output \
         --restore '' \
         --do_train  \
         --do_eval   \

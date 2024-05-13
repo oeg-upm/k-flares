@@ -361,9 +361,10 @@ class Adapter(nn.Module):
         self.up_project.bias.data.zero_()
 
 class PretrainedModel(nn.Module):
-    def __init__(self):
+    def __init__(self,model_name):
         super(PretrainedModel, self).__init__()
-        self.model = RobertaModel.from_pretrained("roberta-large", output_hidden_states=True)
+       #self.model = RobertaModel.from_pretrained("roberta-large", output_hidden_states=True)
+        self.model = RobertaModel.from_pretrained(model_name, output_hidden_states=True)
         self.config = self.model.config
         for p in self.parameters():
             p.requires_grad = False
@@ -680,9 +681,11 @@ def main():
     if args.local_rank not in [-1, 0]:
         torch.distributed.barrier()  # Make sure only the first process in distributed training will download model & vocab
 
-    model_path = '/Users/pablo/Documents/GitHub/K-Flares/maria/roberta-large-bne' #'roberta-large'
+    model_path = '/Users/pablo/Documents/GitHub/K-Flares/maria/roberta-large-bne'  # 'roberta-large'
+    #tokenizer = RobertaTokenizer.from_pretrained('roberta-large')
+    #pretrained_model = PretrainedModel()
     tokenizer = RobertaTokenizer.from_pretrained(model_path)
-    pretrained_model = PretrainedModel()
+    pretrained_model = PretrainedModel(model_path)
     adapter_model = AdapterModel(args, pretrained_model.config, num_labels)
 
     if args.meta_adapter_model:
@@ -717,24 +720,51 @@ def main():
 
     # Training
     if args.do_train:
+        logger.info('Training')
         train_dataset = load_and_cache_examples(args, args.task_name, tokenizer, 'train', evaluate=False)
 
         # train_dataset = RelDataset(examples=train_examples, max_seq_length=args.max_seq_length)
         global_step, tr_loss = train(args, train_dataset, val_dataset, model, tokenizer)
+        logger.info('Training2')
         logger.info(" global_step = %s, average loss = %s", global_step, tr_loss)
 
+    logger.info('Training3')
     if args.do_train and (args.local_rank == -1 or torch.distributed.get_rank() == 0):
         # Create output directory if needed
         if not os.path.exists(args.output_dir) and args.local_rank in [-1, 0]:
             os.makedirs(args.output_dir)
-
+        logger.info('creating')
         logger.info("Saving model checkpoint to %s", args.output_dir)
-        model_to_save = model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
+        model_to_save = model[1] # model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
         model_to_save.save_pretrained(args.output_dir)
         tokenizer.save_pretrained(args.output_dir)
         torch.save(args, os.path.join(args.output_dir, 'training_args.bin'))
 
 
+def tokenize_and_align_labels(tokens, tags, tokenizer):
+    label_all_tokens = True
+    tokenized_inputs = tokenizer(tokens, padding='max_length', truncation=True,
+                                 is_split_into_words=True)
+
+    labels = []
+    for i, label in enumerate(tags):
+        word_ids = tokenized_inputs.word_ids(batch_index=i)
+        previous_word_idx = None
+        label_ids = []
+        for word_idx in word_ids:
+            if word_idx is None:
+                label_ids.append(-100)
+            elif label[word_idx] == '0':
+                label_ids.append(0)
+            elif word_idx != previous_word_idx:
+                label_ids.append(label[word_idx])  # (label2id[label[word_idx]])
+            else:
+                label_ids.append(label[word_idx] if label_all_tokens else -100)  # (label2id[label[word_idx]] if label_all_tokens else -100)
+            previous_word_idx = word_idx
+        labels.append(label_ids)
+
+    tokenized_inputs["labels"] = labels
+    return tokenized_inputs
 
 if __name__ == '__main__':
     main()

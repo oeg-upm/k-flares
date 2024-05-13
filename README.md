@@ -1,10 +1,4 @@
-# k-flares
-
-K-Adaptera and more for Flares challenge
-
-
-Old K-Adapter repo: Infusing Knowledge into Pre-Trained Models with Adapters
-
+# K-Adapter: Infusing Knowledge into Pre-Trained Models with Adapters
 This repository is the official implementation of the paper "K-Adapter: Infusing Knowledge into Pre-Trained Models with Adapters", ACL-IJCNLP 2021 Findings.
 
 In the K-adapter paper, we present a flexible approach that supports continual knowledge infusion into large pre-trained models (e.g. RoBERTa in this work).
@@ -13,14 +7,14 @@ We infuse factual knowledge and linguistic knowledge, and show that adapters for
 For more details, please check the latest version of the paper: [https://arxiv.org/abs/2002.01808](https://arxiv.org/abs/2002.01808)
 
 ## Prerequisites 
-- Python 3.9
-- PyTorch 
+- Python 3.6
+- PyTorch 1.3.1
 - tensorboardX
 - transformers
 
 We use huggingface/transformers framework, the environment can be installed with:
 ```bash
-conda create -n kadapter python=3.9
+conda create -n kadapter python=3.6
 ```
 ```bash
 pip install -r requirements.txt

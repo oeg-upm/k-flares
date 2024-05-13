@@ -171,6 +171,10 @@ class EntityTypeProcessor(DataProcessor):
         return examples
 
 
+
+
+
+
 relations = ['per:siblings', 'per:parents', 'org:member_of', 'per:origin', 'per:alternate_names', 'per:date_of_death',
              'per:title', 'org:alternate_names', 'per:countries_of_residence', 'org:stateorprovince_of_headquarters',
              'per:city_of_death', 'per:schools_attended', 'per:employee_of', 'org:members', 'org:dissolved',
