@@ -149,9 +149,29 @@ The source codes for fine-tuning on SearchQA and Quasar-T dataset are modified b
 ```bash
 bash run_example.sh
 ```
-## TODO
-- Remove and merge redundant codes
-- Support other pre-trained models, such as BERT...
 
-## Contact
-Feel free to contact Ruize Wang (rzwang18@fudan.edu.cn) if you have any further questions.
+
+## Acknowledgments 
+Para su desarrollo este código ha recibido financiación del proyecto INESData (Infraestructura para la INvestigación de ESpacios de DAtos distribuidos en UPM), un proyecto financiado en el contexto de la convocatoria UNICO I+D CLOUD del Ministerio para la Transformación Digital y de la Función Pública en el marco del PRTR financiado por Unión Europea (NextGenerationEU).
+
+
+## Paper Citation
+
+```bibtext
+@inproceedings{oegflares,
+  title={K-Flares: A K-Adapter Based Approach for the FLARES Challenge},
+  author={Pardo, Joel and Liu, Jiayun and Ram{\'o}n-Ferrer, Virginia and Amador-Dom{\'\i}nguez, Elvira and Calleja, Pablo},
+  booktitle={In Proceedings of the Iberian Languages Evaluation Forum (IberLEF 2024), co-located with the 40th Conference of the Spanish Society for Natural Language Processing (SEPLN 2024), CEURWS. org},
+  year={2024},
+ series    = {CEUR Workshop Proceedings},
+  volume    = {3756},
+  year      = {2024},
+  publisher = {CEUR-WS.org},
+  address   = {Valladolid, Spain},
+  month     = {September 24-27},
+  urn       = {urn:nbn:de:0074-3756-8},
+  url       = {https://ceur-ws.org/Vol-3756/FLARES2024_paper1.pdf}
+}
+```
+
+
